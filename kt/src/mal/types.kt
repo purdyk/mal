@@ -13,8 +13,8 @@ class MalHash(ll: List<MalType>): MalType() {
 
 open class MalScalar: MalType()
 
-class MalInt(i: String): MalScalar() {
-  val value = i.toInt()
+class MalInt(val value: Int): MalScalar() {
+  constructor(i: String) : this(i.toInt())
 }
 
 class MalSymbol(val value: String): MalScalar()
@@ -35,3 +35,7 @@ class MalQuote(val value: MalType): MalScalar()
 class MalQuasiQuote(val value: MalType): MalScalar()
 class MalUnquote(val value: MalType): MalScalar()
 class MalSpliceUnquote(val value: MalType): MalScalar()
+
+class MalMethod(val m: (List<MalType>) -> MalType): MalType() {
+  fun invoke(args: List<MalType>) = m.invoke(args)
+}
