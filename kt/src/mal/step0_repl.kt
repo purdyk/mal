@@ -9,7 +9,7 @@ class Step0 {
     var c = true
     while (c) {
       print("user> ")
-      readLine()?.let {   rep(it) } ?: run {
+      readLine()?.let { println(rep(it)) } ?: run {
         c = false
       }
     }
