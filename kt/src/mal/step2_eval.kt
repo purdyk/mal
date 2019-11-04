@@ -16,16 +16,14 @@ class Step2 {
     }
   }
 
-  private fun rep(i: String, e: Env): String {
-    try {
-      var d = read(i)
-      d = eval(d, e)
-      return prin(d)
-    } catch (e: IllegalStateException) {
-      return e.message ?: "WTF"
-    } catch (e: NoSuchElementException) {
-      return "symbol not found"
-    }
+  private fun rep(i: String, e: Env): String = try {
+    var d = read(i)
+    d = eval(d, e)
+    prin(d)
+  } catch (e: IllegalStateException) {
+    e.message ?: "WTF"
+  } catch (e: NoSuchElementException) {
+    "symbol not found"
   }
 
   private fun read(i: String) = readStr(i)
@@ -56,14 +54,14 @@ class Step2 {
 
 
   private fun prin(i: MalType) = prStr(i)
-}
 
-class Env {
-  val symbols: Map<String, MalMethod> =
-      mapOf(
-      "+" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i ->  MalInt(acc.value + i.value)}},
-      "-" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i -> MalInt(acc.value - i.value )}},
-      "*" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i -> MalInt(acc.value * i.value )}},
-      "/" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i -> MalInt(acc.value / i.value )}}
-          )
+  class Env {
+    val symbols: Map<String, MalMethod> =
+        mapOf(
+            "+" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i ->  MalInt(acc.value + i.value)}},
+            "-" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i -> MalInt(acc.value - i.value )}},
+            "*" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i -> MalInt(acc.value * i.value )}},
+            "/" to MalMethod { l -> l.mapNotNull { it as? MalInt }.reduce { acc, i -> MalInt(acc.value / i.value )}}
+        )
+  }
 }
