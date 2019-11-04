@@ -16,9 +16,13 @@ class Step1 {
   }
 
   private fun rep(i: String): String {
-    var d = read(i)
-    d = eval(d)
-    return prin(d)
+    try {
+      var d = read(i)
+      d = eval(d)
+      return prin(d)
+    } catch (e: IllegalStateException) {
+      return e.message ?: "WTF"
+    }
   }
 
   private fun read(i: String) = readStr(i)
