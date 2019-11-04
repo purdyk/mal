@@ -1,5 +1,7 @@
 package mal
 
+import java.io.CharArrayWriter
+
 
 fun readStr(str: String): MalType = readForm(Reader(tokenize(str)))
 
@@ -49,11 +51,35 @@ private fun makeList(r: Reader, d: String = ")"): List<MalType> {
 }
 
 private fun readString(r: Reader): MalString {
-  val s = r.read()
-  check(s.length > 1) { "unbalanced" }
-  check(s.endsWith("\"")) { "unbalanced" }
-  check(!s.endsWith("\\\"")) { "unbalanced" }
-  return MalString(s.trim('"'))
+  val s = r.read().drop(1)
+
+  check(s.length > 0) { "unbalanced" }
+
+  val chs = CharArrayWriter()
+  val it = s.iterator()
+  var hadLast = false
+  while (it.hasNext()) {
+    when (val nc = it.nextChar()) {
+      '\\' -> {
+        when (it.nextChar()) {
+          'n' -> chs.append('\n')
+          '\\' -> chs.append('\\')
+          '\"' -> chs.append('\"')
+          else -> throw IllegalStateException("illegal escape")
+        }
+      }
+
+      '\"' -> hadLast = true
+
+      else -> chs.append(nc)
+    }
+  }
+
+  val d = chs.toString()
+
+  check(hadLast) { "unbalanced" }
+
+  return MalString(d.trim('"'))
 }
 
 private fun readQuote(r: Reader): MalScalar {

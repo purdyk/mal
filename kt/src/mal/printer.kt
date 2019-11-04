@@ -10,7 +10,11 @@ fun prStr(t: MalType): String =
       }
       is MalInt -> t.value.toString()
       is MalSymbol -> t.value
-      is MalString -> "\"${t.value}\""
+      is MalString -> "\"${
+      t.value.replace("\\", "\\\\")
+          .replace("\n", "\\n")
+          .replace("\"", "\\\"")
+          }\""
       is MalQuote -> "(quote ${prStr(t.value)})"
       is MalQuasiQuote -> "(quasiquote ${prStr(t.value)})"
       is MalUnquote -> "(unquote ${prStr(t.value)})"
