@@ -7,7 +7,7 @@ fun main() {
 class Step3 {
   fun main() {
     var c = true
-    val env = Env.baseEnv
+    val env = Core.baseEnv
     while (c) {
       print("user> ")
       readLine()?.let { rep(it, env) } ?: run {
@@ -68,7 +68,7 @@ class Step3 {
   }
 
   private fun let(t: MalList, e: Env): MalType {
-    val ne = Env(e, t.items[1])
+    val ne = Env.withList(e, t.items[1] as? MalVector ?: MalVector(emptyList()))
     (t.items[1] as? MalList)?.chunked(2)?.forEach {
       ne.set(it[0], eval(it[1], ne))
     }

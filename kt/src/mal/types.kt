@@ -3,8 +3,9 @@ package mal
 open class MalType
 
 // Collections
-class MalList(val items: List<MalType>) : MalType(), Iterable<MalType> by items
-class MalVector(val items: List<MalType>) : MalType(), Iterable<MalType> by items
+open class MalVector(val items: List<MalType>) : MalType(), Iterable<MalType> by items
+class MalList(items: List<MalType>) : MalVector(items)
+
 class MalHash(ll: List<MalType>) : MalType() {
   val items: Map<MalType, MalType> =
       ll.chunked(2) { it[0] to it[1] }
@@ -13,6 +14,7 @@ class MalHash(ll: List<MalType>) : MalType() {
 
 // Meta
 class MalDeref(val symbol: MalSymbol) : MalType()
+
 class MalMeta(val meta: MalType, val with: MalType) : MalType()
 
 // Scalar
@@ -23,19 +25,19 @@ class MalInt(val value: Int) : MalScalar() {
 }
 
 class MalSymbol(val value: String) : MalScalar()
+class MalString(val value: String) : MalScalar()
 
-class MalString(val value: String): MalScalar()
-
-class MalBool(tf: String) : MalScalar() {
-  val value = tf == "true"
+class MalBool(val value: Boolean) : MalScalar() {
+  constructor(v: String): this(v == "true")
+  constructor(v: MalInt): this(v.value != 0)
 }
 
-class MalNil(a: String): MalScalar()
+class MalNil(a: String = "") : MalScalar()
 
-class MalQuote(val value: MalType): MalScalar()
-class MalQuasiQuote(val value: MalType): MalScalar()
-class MalUnquote(val value: MalType): MalScalar()
-class MalSpliceUnquote(val value: MalType): MalScalar()
+class MalQuote(val value: MalType) : MalScalar()
+class MalQuasiQuote(val value: MalType) : MalScalar()
+class MalUnquote(val value: MalType) : MalScalar()
+class MalSpliceUnquote(val value: MalType) : MalScalar()
 
 class MalMethod(val m: (List<MalType>) -> MalType) : MalType() {
   fun invoke(args: List<MalType>) = m.invoke(args)

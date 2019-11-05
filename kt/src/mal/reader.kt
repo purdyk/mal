@@ -28,6 +28,7 @@ private class Reader(str: String) {
         '\'', '`', '~' -> quote()
         '^' -> meta()
         '@' -> deref()
+        ':' -> keyword()
         else -> atom()
       }
 
@@ -53,7 +54,7 @@ private class Reader(str: String) {
   }
 
   // I'm not proud of this :'(
-  private fun string(): MalString {
+  private fun string(prefix: String = ""): MalString {
     val s = read().drop(1)
 
     check(s.isNotEmpty()) { "unbalanced" }
@@ -82,7 +83,11 @@ private class Reader(str: String) {
 
     check(hadLast) { "unbalanced" }
 
-    return MalString(d)
+    return MalString(prefix + d)
+  }
+
+  private fun keyword(): MalString {
+    return MalString("\u029E" + read().drop(1))
   }
 
   // All quotes take the next whole form

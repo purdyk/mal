@@ -1,11 +1,16 @@
 package mal
 
-class Env(private val outer: Env?, load: MalType? = null) {
+class Env(private val outer: Env?, binds: MalVector, exprs: MalVector) {
   private val symbols = HashMap<String, MalType>()
 
   init {
-    (load as? MalList)?.chunked(2)?.forEach {
-      set(it[0], it[1])
+    for (it in exprs.withIndex()) {
+      if ((it.value as? MalSymbol)?.value == "&") {
+        set(exprs.items[it.index + 1], MalList(binds.items.drop(it.index)))
+        break
+      } else {
+        set(it.value, binds.items[it.index])
+      }
     }
   }
 
@@ -22,28 +27,9 @@ class Env(private val outer: Env?, load: MalType? = null) {
   fun get(k: String): MalType = symbols[k] ?: outer?.get(k) ?: throw NoSuchElementException(k)
 
   companion object {
-    val baseEnv
-      get() = Env(null).apply {
-        set("+", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value + i.value)
-          }
-        })
-        set("-", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value - i.value)
-          }
-        })
-        set("*", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value * i.value)
-          }
-        })
-        set("/", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value / i.value)
-          }
-        })
-      }
+    fun withList(outer: Env?, load: MalVector): Env {
+      val (f, s) = load.withIndex().partition { it.index.rem(2) == 1 }
+      return Env(outer, MalList(f.map { it.value }), MalList(s.map { it.value }))
+    }
   }
 }
