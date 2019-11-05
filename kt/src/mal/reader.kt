@@ -117,7 +117,7 @@ private class Reader(str: String) {
       peek().let { i ->
         when {
           i.isNumber() -> MalInt(read())
-          i == "nil" -> MalNil(read())
+          i == "nil" -> MalNil().also { read() }
           i == "true" -> MalBool(read())
           i == "false" -> MalBool(read())
           else -> MalSymbol(read())

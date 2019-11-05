@@ -9,7 +9,7 @@ class Step4 {
     var c = true
     val env = Core.baseEnv
     // Language defined functions
-    rep("(def! not (fn* (a) (if a false true)))", env)
+    rep("(def! not (fn* (a) (if a false true)))", env, false)
 
     while (c) {
       print("user> ")
@@ -19,11 +19,11 @@ class Step4 {
     }
   }
 
-  private fun rep(i: String, e: Env) {
+  private fun rep(i: String, e: Env, print: Boolean = true) {
     try {
       var d = read(i)
       d = eval(d, e)
-      println(prin(d))
+      if (print) println(prin(d))
     } catch (e: IllegalStateException) {
       System.err.println(e.message ?: "WTF")
     } catch (e: NoSuchElementException) {

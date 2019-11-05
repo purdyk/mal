@@ -32,7 +32,7 @@ class MalBool(val value: Boolean) : MalScalar() {
   constructor(v: MalInt): this(v.value != 0)
 }
 
-class MalNil(a: String = "") : MalScalar()
+class MalNil : MalScalar()
 
 class MalQuote(val value: MalType) : MalScalar()
 class MalQuasiQuote(val value: MalType) : MalScalar()
