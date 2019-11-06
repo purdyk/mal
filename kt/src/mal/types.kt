@@ -22,6 +22,12 @@ open class MalScalar : MalType()
 
 class MalInt(val value: Int) : MalScalar() {
   constructor(i: String) : this(i.toInt())
+
+  operator fun plus(other: MalInt) = MalInt(value + other.value)
+  operator fun minus(other: MalInt) = MalInt(value - other.value)
+  operator fun times(other: MalInt) = MalInt(value * other.value)
+  operator fun div(other: MalInt) = MalInt(value / other.value)
+
 }
 
 class MalSymbol(val value: String) : MalScalar()

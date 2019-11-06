@@ -8,24 +8,16 @@ class Core {
       get() = Env(null, MalList(emptyList()), MalList(emptyList())).apply {
         // Basic Math
         set("+", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value + i.value)
-          }
+          l.mapNotNull { it as? MalInt }.reduce { acc, i ->  acc + i }
         })
         set("-", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value - i.value)
-          }
+          l.mapNotNull { it as? MalInt }.reduce { acc, i -> acc - i }
         })
         set("*", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value * i.value)
-          }
+          l.mapNotNull { it as? MalInt }.reduce { acc, i -> acc * i }
         })
         set("/", MalMethod { l ->
-          l.mapNotNull { it as? MalInt }.reduce { acc, i ->
-            MalInt(acc.value / i.value)
-          }
+          l.mapNotNull { it as? MalInt }.reduce { acc, i -> acc / i }
         })
 
         // String Methods
