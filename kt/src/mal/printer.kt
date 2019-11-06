@@ -19,6 +19,7 @@ fun prStr(t: MalType, pretty: Boolean = true): String =
       is MalMeta -> "(with-meta ${prStr(t.with, pretty)} ${prStr(t.meta, pretty)})"
       is MalDeref -> "(deref ${t.symbol.value})"
       is MalMethod -> "#<fun>"
+      is MalClosure -> "#<closure>"
 
       is MalString -> {
         if (t.value.length > 1 && t.value[0] == '\u029E') {

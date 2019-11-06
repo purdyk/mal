@@ -48,3 +48,5 @@ class MalSpliceUnquote(val value: MalType) : MalScalar()
 class MalMethod(val m: (List<MalType>) -> MalType) : MalType() {
   fun invoke(args: List<MalType>) = m.invoke(args)
 }
+
+class MalClosure(val env: Env, val ast: MalType, val params: MalType): MalType() { }
