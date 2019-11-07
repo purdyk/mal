@@ -1,5 +1,8 @@
 package mal
 
+import java.io.FileInputStream
+import java.nio.charset.Charset
+
 class Core {
 
 
@@ -75,6 +78,40 @@ class Core {
             else -> 0
           })
         })
+
+        // Files
+        set("read-string", MalMethod {
+          (it[0] as? MalString)?.let { readStr(it.value) } ?: MalNil()
+        })
+
+        set("slurp", MalMethod {
+          (it[0] as? MalString)?.let {
+            FileInputStream(it.value).reader(Charset.forName("UTF-8")).use {
+              MalString(it.readText())
+            }
+          } ?: MalNil()
+        })
+
+        // Meta
+        set("atom", MalMethod {
+          MalAtom(it.first())
+        })
+
+        set("atom?", MalMethod {
+          MalBool(it.first() is MalAtom)
+        })
+
+        set("deref", MalMethod {
+          (it.first() as? MalAtom)?.symbol
+              ?: MalNil()
+        })
+
+        set("reset!", MalMethod {
+          (it.first() as? MalAtom)?.symbol = it[1]
+          it[1]
+        })
+
+        // swap! defined inline
       }
 
     private fun isEqual(l: MalType, r: MalType): Boolean {

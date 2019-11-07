@@ -17,7 +17,7 @@ fun prStr(t: MalType, pretty: Boolean = true): String =
       is MalBool -> t.value.toString()
       is MalNil -> "nil"
       is MalMeta -> "(with-meta ${prStr(t.with, pretty)} ${prStr(t.meta, pretty)})"
-      is MalDeref -> "(deref ${t.symbol.value})"
+      is MalAtom -> "(atom ${prStr(t.symbol, pretty)})"
       is MalMethod -> "#<fun>"
       is MalClosure -> "#<closure>"
 

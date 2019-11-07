@@ -13,7 +13,7 @@ class MalHash(ll: List<MalType>) : MalType() {
 }
 
 // Meta
-class MalDeref(val symbol: MalSymbol) : MalType()
+class MalAtom(var symbol: MalType): MalType()
 
 class MalMeta(val meta: MalType, val with: MalType) : MalType()
 

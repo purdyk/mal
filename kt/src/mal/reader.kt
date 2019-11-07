@@ -14,13 +14,16 @@ private class Reader(str: String) {
       "[\\s,]*(~@|[\\[\\]{}()'`~^@]|\"(?:\\\\.|[^\\\\\"])*\"?|;.*|[^\\s\\[\\]{}('\"`,;)]*)")
 
   private val data: List<String> = tkr.findAll(str)
-      .map { it.value.trim(' ', ',') }
+      .map { it.value.trim(' ', ',', '\n') }
       .filter { it.isNotEmpty() }
+      .filter { it[0] != ';' }
       .toList()
-//        .also { println(it) }
+//      .also { println(it.joinToString(" ")) }
 
   fun form(): MalType =
-      when (peek()[0]) {
+      if (empty())
+        MalNil()
+      else when (peek()[0]) {
         '(' -> list()
         '[' -> vector()
         '{' -> hash()
@@ -106,11 +109,9 @@ private class Reader(str: String) {
     return MalMeta(form(), form())
   }
 
-  private fun deref(): MalDeref {
+  private fun deref(): MalType {
     read()
-    return (form() as? MalSymbol)?.let { MalDeref(it) } ?: run {
-      throw IllegalArgumentException("non symbol dereference")
-    }
+    return MalList(listOf(MalSymbol("deref"), MalSymbol(read())))
   }
 
   private fun atom(): MalScalar =
